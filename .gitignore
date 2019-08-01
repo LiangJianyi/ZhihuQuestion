@@ -1,0 +1,11 @@
+﻿
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
+*.exe
+*.pdb
+*.cache
+知乎提问代码示例/ConsoleApp1/.vs/*
+知乎提问代码示例/ConsoleApp1/ConsoleApp1/obj/*
+知乎提问代码示例/ConsoleApp1/ConsoleApp1/obj/Debug/*

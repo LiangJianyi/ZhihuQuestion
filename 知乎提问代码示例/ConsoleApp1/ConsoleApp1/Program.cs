@@ -19,21 +19,39 @@ namespace ConsoleApp {
             PutMyDataSerializeBinary(path);
             var data = ReadMyDataFromBinary(path);
             if (data != null) {
-                Console.WriteLine($"data.DataCollection.Count: {data.DataCollection.Length}");
-                DateTime startime = DateTime.Now;
-                int[] orderArr = data.DataCollection.OrderBy(e => e).ToArray();
-                Console.WriteLine($"Orderby time consuming: {(DateTime.Now - startime).Seconds} seconds.");
-                int i = 1;
-                foreach (var item in orderArr) {
-                    if (i <= 10) {
-                        Console.Write($"{item} ");
-                        i += 1;
+                try {
+                    Console.WriteLine($"data.DataCollection.Count: {data.DataCollection.Length}");
+                    DateTime startime = DateTime.Now;
+                    Console.WriteLine("Start sorting...");
+                    int[] orderArr = data.DataCollection.AsParallel<int>().OrderBy(e => e).ToArray();
+                    Console.WriteLine($"Orderby time consuming: {(DateTime.Now - startime).Seconds} seconds.");
+                    int i = 1;
+                    foreach (var item in orderArr) {
+                        if (i <= 10) {
+                            Console.Write($"{item} ");
+                            i += 1;
+                        }
+                        else {
+                            break;
+                        }
                     }
-                    else {
-                        break;
-                    }
+                    Console.WriteLine();
+                    Console.WriteLine("Done.");
+                }
+                catch (OutOfMemoryException e) {
+                    Console.WriteLine($"Error!\n {e.Message}");
+                }
+                catch (DirectoryNotFoundException) {
+                    Console.WriteLine($"{path} is not found.");
+                }
+                finally {
+                    File.Delete(path);
                 }
             }
+            else {
+                Console.WriteLine($"{path} is not found.");
+            }
+
             Console.ReadKey();
         }
 
